@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Clinical Trial Intelligence AI Agent</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        /* BACKGROUND */
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial;
+            background: linear-gradient(135deg, #020617, #0f172a);
+            color: white;
+        }
+
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 34px;
+            color: #38bdf8;
+        }
+
+        .header p {
+            color: #94a3b8;
+        }
+
+
+        /* SEARCH */
+
+        .searchBox {
+
+            max-width: 700px;
+            margin: auto;
+
+            background: #020617;
+            padding: 30px;
+
+            border-radius: 14px;
+
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+
+            text-align: center;
+
+        }
+
+        input {
+
+            width: 70%;
+            padding: 15px;
+
+            border-radius: 10px;
+            border: none;
+
+            font-size: 16px;
+
+        }
+
+        button {
+
+            padding: 15px 30px;
+            margin-left: 10px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #38bdf8;
+            color: black;
+
+            font-weight: bold;
+            cursor: pointer;
+
+        }
+
+        button:hover {
+
+            background: #0ea5e9;
+
+        }
+
+
+        /* MODE SWITCH */
+
+        .mode {
+
+            margin-top: 15px;
+            color: #94a3b8;
+
+        }
+
+
+        /* RESULT */
+
+        .result {
+
+            max-width: 1000px;
+            margin: 40px auto;
+
+        }
+
+
+        /* GRID */
+
+        .grid {
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+
+        }
+
+
+        /* CARD */
+
+        .card {
+
+            background: #020617;
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+
+        }
+
+
+        /* TITLES */
+
+        .big {
+
+            font-size: 30px;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .title {
+
+            font-size: 20px;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .label {
+
+            color: #94a3b8;
+
+        }
+
+
+        /* EXPLAIN */
+
+        .explain {
+
+            margin-top: 20px;
+            line-height: 1.7;
+
+        }
+
+
+        /* SCRAPER */
+
+        .scraper {
+
+            margin-top: 20px;
+            line-height: 1.7;
+            color: #cbd5f5;
+
+        }
+
+
+        /* JSON */
+
+        pre {
+
+            background: black;
+            padding: 20px;
+            border-radius: 10px;
+            color: #00ff9d;
+            overflow: auto;
+
+        }
+
+
+        /* LOADING */
+
+        .loading {
+
+            text-align: center;
+            font-size: 20px;
+            color: #38bdf8;
+
+        }
+
+
+        /* RISK COLORS */
+
+        .danger {
+
+            color: #ef4444;
+            font-weight: bold;
+
+        }
+
+        .moderate {
+
+            color: #f59e0b;
+            font-weight: bold;
+
+        }
+
+        .safe {
+
+            color: #22c55e;
+            font-weight: bold;
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+    <div class="header">
+
+        <h1>Clinical Trial Intelligence AI Agent</h1>
+
+        <p>AI Powered Multi-Agent Clinical Trial Analysis</p>
+
+    </div>
+
+
+
+    <div class="searchBox">
+
+        <h2>Search Disease</h2>
+
+        <input id="disease" placeholder="Enter disease name">
+
+        <button onclick="search()">
+            Run AI Agent
+        </button>
+
+        <div class="mode">
+
+            View Mode:
+
+            <select id="mode">
+
+                <option value="read">
+                    Professional View
+                </option>
+
+                <option value="json">
+                    JSON Data
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="result" class="result">
+
+        <div class="loading">
+
+            AI Agent Ready
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+
+
+        function riskColor(risk) {
+
+            if (risk == "Dangerous")
+                return "danger"
+
+            if (risk == "Moderate")
+                return "moderate"
+
+            return "safe"
+
+        }
+
+
+
+        async function search() {
+
+            let disease = document.getElementById("disease").value
+
+            let mode = document.getElementById("mode").value
+
+
+
+            document.getElementById("result").innerHTML =
+
+                "<div class='loading'>AI Agent Processing...</div>"
+
+
+
+            try {
+
+
+                let trial = await fetch(
+
+                    "http://127.0.0.1:8000/agent/" + disease
+
+                )
+
+                trial = await trial.json()
+
+
+
+                let explain = await fetch(
+
+                    "http://127.0.0.1:8000/explain/" + disease
+
+                )
+
+                explain = await explain.json()
+
+
+
+                let scrape = await fetch(
+
+                    "http://127.0.0.1:8000/scrape/" + disease
+
+                )
+
+                scrape = await scrape.json()
+
+
+
+                if (mode == "json") {
+
+                    document.getElementById("result").innerHTML =
+
+                        "<pre>" + JSON.stringify({
+
+                            trial,
+
+                            explain,
+
+                            scrape
+
+                        }, null, 2) + "</pre>"
+
+                    return
+
+                }
+
+
+
+                let color = riskColor(trial.risk_level)
+
+
+
+                document.getElementById("result").innerHTML = `
+
+<div class="grid">
+
+<div class="card">
+
+<div class="big">
+
+${trial.disease}
+
+</div>
+
+<div class="label">
+
+Clinical Trial Summary
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="title">
+
+AI Confidence
+
+</div>
+
+${trial.confidence} %
+
+</div>
+
+
+<div class="card">
+
+<div class="title">
+
+Trial Information
+
+</div>
+
+Phase: ${trial.trial_phase}
+
+<br><br>
+
+Success Rate: ${trial.success_rate} %
+
+<br><br>
+
+Company: ${trial.company}
+
+<br><br>
+
+Duration: ${trial.duration}
+
+</div>
+
+
+
+<div class="card">
+
+<div class="title">
+
+Risk Level
+
+</div>
+
+<span class="${color}">
+
+${trial.risk_level}
+
+</span>
+
+</div>
+
+</div>
+
+
+
+<div class="card explain">
+
+<div class="title">
+
+AI Explanation
+
+</div>
+
+${explain.explanation}
+
+</div>
+
+
+
+<div class="card scraper">
+
+<div class="title">
+
+Web Knowledge (Scraper)
+
+</div>
+
+${scrape.scraped_text}
+
+</div>
+
+`
+
+
+            } catch (e) {
+
+                document.getElementById("result").innerHTML =
+
+                    "<div class='loading'>System Error</div>"
+
+            }
+
+
+
+        }
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>
