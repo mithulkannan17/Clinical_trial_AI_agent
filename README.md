@@ -1,5 +1,7 @@
 **Clinical Trial Intelligence AI Agent System**
-Orchestrating Data, Validation, and Insight for Medical ResearchMedical research is currently buried under what I call the "Fog of Unstructured Information". Right now, vital trial data is scattered across thousands of PDFs, registries, and dense research papers. I built this system to act as an intelligent orchestration layer that doesn't just "read" this data, but actually validates and structures it into something usable for researchers in real-time.
+
+/*Orchestrating Data, Validation, and Insight for Medical Research*/
+Medical research is currently buried under what I call the "Fog of Unstructured Information". Right now, vital trial data is scattered across thousands of PDFs, registries, and dense research papers. I built this system to act as an intelligent orchestration layer that doesn't just "read" this data, but actually validates and structures it into something usable for researchers in real-time.
 The goal was to replace the hours spent manually hunting through abstracts with a centralized, "safe" source of truth
 
 **How It Works (The Architecture)**
